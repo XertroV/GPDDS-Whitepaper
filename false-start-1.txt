@@ -1,0 +1,76 @@
+Hey,
+
+So that other idea I had is - at its core - called GPDHT - General Purpose Distributed Hash Table.
+
+However, there are two other things that make it special or worth using, the State Maker and Interpreter.
+
+'My' particular versions of these I'll refer to as C0. That is the (GPDHT PoW Chain, State Maker, Interpreter) triple.
+
+GPDHT or PoW PRISM
+=============
+
+The device I describe below I'm calling a PoW PRISM - since it takes anything it receives, and sends to many people. It also does some validation and records valid messages in a DB.
+
+You have a P2P network similar to others. The purpose of this network is simply to pass around updates to DHTs of which there can be many - however, each must be associated with a PoW Chain (or some other kind of chain). These updates are known as declarations (to highlight this is about speech and claiming something). There are two forms:
+
+PoW Declarations: (PDs)
+    These are bundles of information that satisfy some condition (usually PoW) and should contain updates about which SDs are valid
+
+Single Declarations: (SDs)
+    These are what every individual broadcasts. They have no metadata and are just lists of data.
+
+A k:v table is maintained in the following structure:
+{
+    0:<PD0-hash>
+    1:<PD1-hash>         } PD Index
+    2:<PD2-hash>
+    ...
+    PD0-hash: <PD0>
+    PD1-hash: <PD1>
+    ...
+    SD0-hash: <SD0>
+    SD1-hash: <SD1>
+    ...
+    2**256-3: <SD2-hash>
+    2**256-2: <SD1-hash>       } SD Index
+    2**256-1: <SD0-hash>
+}
+
+The index's can be stored separately if need or desire justifies it.
+
+the PoW PRISM responds to only 5 networking commands:
+
+version - obvious
+friends - provides known nodes in response to a filter (which is probably the PoW Chain)
+info - advertise a declaration, may be unsolicited
+describe - request info for a key (or list of keys)
+disputed - request info on unconfirmed (disputed) declarations - some filter is needed, though
+
+That's the *basics* which can be customised further for more specific applications.
+
+C0 Customisations
+------------------------
+
+So, C0 will be a bit more detailed to get a bit more out of it:
+
+PDs are of the following format:
+{
+    header: [version, votes, diff, prevhash, UberMR]
+    UberMR:[RootContract, ChainProof, Uncles, StateMR, SingleDecsMR]
+    chainproof:[hash1, hash2,...]
+    uncles:[hash1, hash2,...]
+    stateMR:[hash1, hash2,...]
+    SDsMR:[hash1, hash2,...]
+}
+
+To begin with, when a new PD is created, only the header is advertised. Since the prevhash is known, chances are a node can tell if it they want to care about the PD or not (fork-ability is a nice property of this system).
+
+All merkle roots are recorded in the HT as keys to lists of their constituent hashes.
+
+When a node finds a PD they like they ask `describe UberMR` and the responding node sends back `[RootContract, ChainProof, Uncles, StateMR, SingleDecsMR]`
+
+RootContract is a level down and really better thought of as a chain-state variable. If this is not what you expect then ignore the PD.
+
+ChainProof is a MR that allows one to prove a past block is an ancestor of the current block. See `incremental merkle trees` for more. The chainproof only needs to be updated, never recalculated. It's fantastic for SPV which is why I'm including it in these blocks.
+
+Uncles are lists of other valid blocks at the same height as parent block. The point of this is to not just measure ancestry but also popularity of blocks. If an attacker tries a sneaky 51% attack nobody will have added them to the uncles list which means the PoW chain can now not just use cumulative difficulty but also cumulative popularity. Basically even with a block target time of 30s an attacker needs 51% to attack the network, instead of 25% or something ridiculous 
