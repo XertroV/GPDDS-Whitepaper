@@ -1,0 +1,2 @@
+#!/bin/bash
+GIT_EXTERNAL_DIFF="`dirname $0`/git-fold-wdiff" git diff

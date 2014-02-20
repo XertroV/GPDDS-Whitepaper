@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#
+# Execute a command line running all file arguments first through a
+# word wrapper (fold -s).
+#
+# A useful way to use this is
+#   $ folddo wdiff -t oldfile.txt newfile.txt
+# which generates a nice word-wrapped diff of text files with very
+# long lines.
+#
+
+FOLDED=
+CMD=$1
+shift
+while [[ "$1" ]]; do
+    if [[ -f "$1" ]]; then
+  F=`mktemp /tmp/folddo.XXXXXXXXXX`
+  fold -s "$1" >$F
+  CMD="$CMD $F"
+  FOLDED="$FOLDED $F"
+    else
+  CMD="$CMD $1"
+    fi
+    shift
+done
+$CMD
+rm $FOLDED
