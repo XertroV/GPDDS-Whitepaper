@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#
+# git-fold-wdiff - an external diff wrapper script for git
+#
+# Does a word-by-word colored word-wrapped diff which is useful for
+# plain text files with very long lines.
+#
+# Usage e.g.: GIT_EXTERNAL_DIFF=git-fold-wdiff git diff
+#
+# Requires the folddo script, see:
+# http://snipt.net/akaihola/human-readable-diff-for-plain-text-with-very-long-lines/
+#
+
+RED=$'\e'"[1;31m"
+GREEN=$'\e'"[1;32m"
+RESET=$'\e'"[0m"
+WDIFF_ARGS="-w$RED -x$RESET -y$GREEN -z$RESET -n"
+`dirname $0`/folddo wdiff $WDIFF_ARGS "$2" "$5"
+
