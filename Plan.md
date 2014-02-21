@@ -26,3 +26,4 @@
 		Incentivising miners
 		Building under Bitcoin/*coin
 		Cross chain payments, markets, etc
+	Conclusion
