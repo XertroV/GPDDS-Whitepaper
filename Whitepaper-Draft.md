@@ -11,7 +11,7 @@ Authors:
 ## Abstract
 
 Existing Distributed Hash Table (DHT) implementations verify data integrity by
-comparing the received value by it's expected hash. This method only works in
+comparing the received value with it's expected hash. This method only works in
 cases where a hash of the data is known in advance, and a secure timestamp of
 the data is not required.
 
