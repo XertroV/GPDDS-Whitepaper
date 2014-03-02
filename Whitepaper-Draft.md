@@ -1,14 +1,41 @@
-# TITLE (gpdds and blockchains for now)
+# General Purpose Distributed Hash Tables
 
 Authors:
 
-* Bob
+* Jack Murray
+* Max Kaye
+* ??
 
-1/1/2001
+2014/2/3
 
-## Intro
+## Abstract
+
+Existing Distributed Hash Table (DHT) implementations verify data integrity by
+comparing the received value by it's expected hash. This method only works in
+cases where a hash of the data is known in advance, and a secure timestamp of
+the data is not required.
+
+Furthermore, there is no existing widespread standard for DHT, so each protocol
+implements their own.
+
+This paper explores the use of a single blockchain as a means of implementing a
+secure DHT that is available for use by protocols simultaneously.
 
 ### Background
+
+<div class="notes">
+TODO 
+(DHT) are commonly used in decentralised protocols to
+acquire an unknown value.
+
+"that require data integrity usually map the hash of each value to the value
+itself. This way, a received value can be checked against it's key to ensure no
+tampering has occured."
+
+Talk about DHT, BitTorrent, PyBitMessage.
+
+Talk about Blockchains, BitTorrent.
+</div>
 
 ### Problems
 
